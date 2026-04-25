@@ -4,11 +4,6 @@
 
 FRED API + RAG 기반 미국 연준(Federal Reserve) 경제 데이터 분석 챗봇
 
-[![Python](https://img.shields.io/badge/Python-3.11-blue)](https://www.python.org/)
-[![Flask](https://img.shields.io/badge/Flask-3.1-lightgrey)](https://flask.palletsprojects.com/)
-[![LangChain](https://img.shields.io/badge/LangChain-RAG-green)](https://langchain.com/)
-[![Render](https://img.shields.io/badge/Deploy-Render-purple)](https://kcu-fed.onrender.com/)
-
 ---
 
 ## 프로젝트 소개
@@ -27,9 +22,14 @@ FRED API로 실시간 경제지표를 수집하고, 연설문·회의록·SEP �
 
 ![메인 화면](assets/main.png)
 
-![다국어 설정](assets/language.png)
+<p align="center">
+  <img src="assets/language.png" width="48%"/>
+  <img src="assets/indicators.png" width="48%"/>
+</p>
 
-![사용한 지표](assets/indicators.png)
+<p align="center">
+  <img src="assets/scatter.png" width="60%"/>
+</p>
 
 ---
 
@@ -64,6 +64,8 @@ FRED API로 실시간 경제지표를 수집하고, 연설문·회의록·SEP �
 
 ## 담당 파트
 
+**Role: Project Lead Engineer**
+
 - **SEP end-to-end 파이프라인** — PDF 크롤링(`sep_crawler.py`) → 데이터 구조화(`sep_structurer.py`) → CSV 저장 → GPT 프롬프트 주입 → 차트 오버레이까지 전체 설계 및 구현
 - **백엔드 전반** — Flask API 설계(`/api/chat`, `/api/chart`), RAG 파이프라인 구축
 - **RESTful API 이중 엔드포인트 설계** — 텍스트 답변과 차트 데이터를 분리 처리해 프론트엔드 렌더링 최적화
@@ -73,8 +75,7 @@ FRED API로 실시간 경제지표를 수집하고, 연설문·회의록·SEP �
 - **APScheduler 자동 업데이트** — 매일 새벽 4시 최신 연설문·회의록 자동 수집 스케줄러 설계
 - **프론트엔드** — 반응형 UI, Plotly.js 차트 연동, 다국어 지원(한국어·영어·스페인어)
 
-> 본 프로젝트는 팀 프로젝트이며, 위 파트를 담당했습니다.  
-> 원본 레포: [seongmin678/KCU_FED](https://github.com/seongmin678/KCU_FED)
+> 본 프로젝트는 팀 프로젝트이며, 위 파트를 담당했습니다.
 
 ---
 
