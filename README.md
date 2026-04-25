@@ -23,12 +23,12 @@ FRED API로 실시간 경제지표를 수집하고, 연설문·회의록·SEP �
 ![메인 화면](assets/main.png)
 
 <p align="center">
-  <img src="assets/language.png" width="48%"/>
-  <img src="assets/indicators.png" width="48%"/>
+  <img src="assets/language.png" width="50%"/>
+  <img src="assets/indicators.png" width="50%"/>
 </p>
 
 <p align="center">
-  <img src="assets/scatter.png" width="75%"/>
+  <img src="assets/scatter.png" width="100%"/>
 </p>
 
 ---
