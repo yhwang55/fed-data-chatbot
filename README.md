@@ -6,7 +6,7 @@ FRED API + RAG 기반 미국 연준(Federal Reserve) 경제 데이터 분석 챗
 
 [![Launch App](https://img.shields.io/badge/Launch%20App-kcu--fed.onrender.com-2563eb?style=for-the-badge&logo=render&logoColor=white)](https://kcu-fed.onrender.com/)
 
-> Render 무료 플랜 특성상 첫 접속 시 서버가 깨어나는 데 약 30초 소요될 수 있습니다.
+> Cold start: 첫 접속 시 약 30초 소요될 수 있습니다.
 
 ---
 
