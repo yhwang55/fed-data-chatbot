@@ -1,8 +1,12 @@
 # Fed Data Chatbot
 
-> KCU 2026 — Best Project Award · 1st Place
+> 🏆 **KCU 2026 — Best Project Award · 1st Place** *(University of Wisconsin-Madison)*
 
 FRED API + RAG 기반 미국 연준(Federal Reserve) 경제 데이터 분석 챗봇
+
+[![Launch App](https://img.shields.io/badge/Launch%20App-kcu--fed.onrender.com-2563eb?style=for-the-badge&logo=render&logoColor=white)](https://kcu-fed.onrender.com/)
+
+> Render 무료 플랜 특성상 첫 접속 시 서버가 깨어나는 데 약 30초 소요될 수 있습니다.
 
 ---
 
@@ -11,10 +15,6 @@ FRED API + RAG 기반 미국 연준(Federal Reserve) 경제 데이터 분석 챗
 자연어로 질문하면 미국 연준의 경제 데이터를 분석해주는 AI 챗봇입니다.  
 FRED API로 실시간 경제지표를 수집하고, 연설문·회의록·SEP 문서를 RAG로 연결해  
 수치와 맥락, 미래 전망을 동시에 제공합니다.
-
-[서비스 바로가기](https://kcu-fed.onrender.com/)
-
-> Render 무료 플랜 특성상 첫 접속 시 서버가 깨어나는 데 약 30초 소요될 수 있습니다.
 
 ---
 
@@ -28,7 +28,7 @@ FRED API로 실시간 경제지표를 수집하고, 연설문·회의록·SEP �
 </p>
 
 <p align="center">
-  <img src="assets/scatter.png" width="60%"/>
+  <img src="assets/scatter.png" width="75%"/>
 </p>
 
 ---
