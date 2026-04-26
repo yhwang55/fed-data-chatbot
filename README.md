@@ -10,6 +10,10 @@ FRED API + RAG 기반 미국 연준(Federal Reserve) 경제 데이터 분석 챗
 
 ---
 
+[![Project Report](https://img.shields.io/badge/Project%20Report-View%20PDF-1B2A4A?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)](https://github.com/yhwang55/fed-data-chatbot/blob/main/kcu_fed_report.pdf)
+
+---
+
 ## 프로젝트 소개
 
 자연어로 질문하면 미국 연준의 경제 데이터를 분석해주는 AI 챗봇입니다.  
