@@ -2,29 +2,28 @@
 
 > 🏆 **KCU 2026 — Best Project Award · 1st Place** *(University of Wisconsin-Madison)*
 
-FRED API + RAG 기반 미국 연준(Federal Reserve) 경제 데이터 분석 챗봇
+An AI chatbot for analyzing U.S. Federal Reserve economic data, built with FRED API and RAG.
 
 [![Launch App](https://img.shields.io/badge/Launch%20App-kcu--fed.onrender.com-2563eb?style=for-the-badge&logo=render&logoColor=white)](https://kcu-fed.onrender.com/)
 
-> Cold start: 첫 접속 시 약 30초 소요될 수 있습니다.
+> Cold start: Initial load may take up to 30 seconds on the free Render tier.
 
 ---
 
-[![Project Report](https://img.shields.io/badge/Project%20Report-View%20PDF-1B2A4A?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)](https://github.com/yhwang55/fed-data-chatbot/blob/main/kcu_fed_report.pdf)
+[![Technical Report (EN)](https://img.shields.io/badge/Technical%20Report%20(EN)-View%20PDF-1B2A4A?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)](https://github.com/yhwang55/fed-data-chatbot/blob/main/technical_report_EN.pdf)&nbsp;&nbsp;[![Project Report (KR)](https://img.shields.io/badge/Project%20Report%20(KR)-View%20PDF-6B7280?style=for-the-badge&logo=adobeacrobatreader&logoColor=white)](https://github.com/yhwang55/fed-data-chatbot/blob/main/kcu_fed_report.pdf)
 
 ---
 
-## 프로젝트 소개
+## Overview
 
-자연어로 질문하면 미국 연준의 경제 데이터를 분석해주는 AI 챗봇입니다.  
-FRED API로 실시간 경제지표를 수집하고, 연설문·회의록·SEP 문서를 RAG로 연결해  
-수치와 맥락, 미래 전망을 동시에 제공합니다.
+Ask questions in natural language and get instant analysis of Federal Reserve economic data.  
+Real-time indicators are fetched via the FRED API, while Fed speeches, FOMC meeting minutes, and SEP documents are connected through a RAG pipeline — delivering numbers, context, and forward projections in a single response.
 
 ---
 
-## 스크린샷
+## Screenshots
 
-![메인 화면](assets/main.png)
+![Main Screen](assets/main.png)
 
 <p align="center">
   <img src="assets/language.png" width="49%"/>
@@ -37,21 +36,21 @@ FRED API로 실시간 경제지표를 수집하고, 연설문·회의록·SEP �
 
 ---
 
-## 주요 기능
+## Features
 
-- **인터랙티브 차트** — 기준금리·CPI·실업률·GDP 등 10개 이상 지표 시각화 (Plotly.js)
-- **RAG 기반 답변** — 연준 연설문 223개 + FOMC 회의록 기반 맥락 답변
-- **SEP 전망 오버레이** — Fed 공식 경제 전망치를 차트에 점선으로 표시
-- **자동 업데이트** — APScheduler로 매일 새벽 4시 최신 문서 자동 수집
-- **다국어 지원** — 한국어 / 영어 / 스페인어
-- **반응형 UI** — 모바일 환경 지원
+- **Interactive Charts** — Visualize 10+ indicators including Fed Funds Rate, CPI, Unemployment, and GDP (Plotly.js)
+- **RAG-Powered Answers** — Responses grounded strictly in retrieved Fed documents and FRED API data; the model is explicitly prevented from using general LLM knowledge to avoid hallucination
+- **SEP Forecast Overlay** — Official Fed economic projections plotted as a dotted overlay; automatically suppressed for historical date-range queries
+- **Auto-Update Pipeline** — APScheduler crawls and indexes the latest Fed documents daily at 4 AM
+- **Multilingual** — English / Korean / Spanish with full localization across UI, charts, and axis labels
+- **Responsive UI** — Mobile-friendly layout
 
 ---
 
-## 기술 스택
+## Tech Stack
 
-| 분류 | 기술 |
-|------|------|
+| Layer | Technology |
+|-------|------------|
 | Backend | Python 3.11, Flask, LangChain, ChromaDB |
 | AI/LLM | OpenAI GPT-4o-mini, text-embedding-3-small |
 | Data | FRED API, BeautifulSoup, pypdf |
@@ -60,39 +59,43 @@ FRED API로 실시간 경제지표를 수집하고, 연설문·회의록·SEP �
 
 ---
 
-## 시스템 아키텍처
+## System Architecture
 
 ![Architecture](assets/architecture.svg)
 
 ---
 
-## 담당 파트
+## My Contributions
 
 **Role: Project Lead Engineer**
 
-- **SEP end-to-end 파이프라인** — PDF 크롤링(`sep_crawler.py`) → 데이터 구조화(`sep_structurer.py`) → CSV 저장 → GPT 프롬프트 주입 → 차트 오버레이까지 전체 설계 및 구현
-- **백엔드 전반** — Flask API 설계(`/api/chat`, `/api/chart`), RAG 파이프라인 구축
-- **RESTful API 이중 엔드포인트 설계** — 텍스트 답변과 차트 데이터를 분리 처리해 프론트엔드 렌더링 최적화
-- **자연어 → FRED ticker 자동 매핑** — 키워드 기반 매핑 로직 직접 구현으로 LLM 의존도 최소화 및 응답 지연 감소
-- **질문 의도 기반 차트 타입 자동 분기** — 시계열 질문은 라인차트, 관계 분석 질문은 산점도로 자동 전환
-- **ChromaDB 임베딩 파이프라인** — 청크 분할, 벡터화, API 요청 제한(429) 대응 retry 로직 구현
-- **APScheduler 자동 업데이트** — 매일 새벽 4시 최신 연설문·회의록 자동 수집 스케줄러 설계
-- **프론트엔드** — 반응형 UI, Plotly.js 차트 연동, 다국어 지원(한국어·영어·스페인어)
+- **SEP End-to-End Pipeline** — Designed and implemented the full pipeline: PDF crawling (`sep_crawler.py`) → data structuring (`sep_structurer.py`) → CSV storage → GPT prompt injection → chart overlay
+- **Backend Architecture** — Built Flask API (`/api/chat`, `/api/chart`) and RAG pipeline with LangChain + ChromaDB
+- **Dual-Endpoint API Design** — Separated text answers and chart data into independent endpoints to optimize frontend rendering performance
+- **NL → FRED Ticker Mapping** — Implemented keyword-based mapping logic to minimize LLM dependency and reduce response latency
+- **Intent-Based Chart Type Routing** — Automatically switches between line charts (time-series) and scatter plots (correlation analysis) based on query intent
+- **ChromaDB Embedding Pipeline** — Chunking, vectorization, and retry logic for API rate limit (429) handling; source-level deduplication to prevent redundant chunk accumulation; MMR retrieval (k=8, fetch_k=20) for diverse, high-quality context over naive similarity search
+- **Hallucination Prevention** — Prompt engineered to refuse out-of-scope questions and explicitly disallow fabrication when retrieved context is insufficient; SEP projection context injected dynamically per request rather than cached at server startup
+- **Scheduled Auto-Update** — Designed APScheduler job to crawl and index the latest Fed speeches and meeting minutes daily
+- **Frontend** — Responsive UI, Plotly.js chart integration, full i18n across UI text, chart axis labels, indicator names, and SEP overlay labels (English / Korean / Spanish)
 
-> 본 프로젝트는 팀 프로젝트이며, 위 파트를 담당했습니다.
+> This is a team project. The above reflects my individual contributions.
 
 ---
 
-## 프로젝트 구조
+## Project Structure
 
 ```
 fed-data-chatbot/
-├── app.py                # Flask 서버 + RAG 파이프라인
-├── sep_crawler.py        # SEP PDF 크롤링
-├── sep_structurer.py     # SEP 데이터 구조화 -> CSV
-├── sep_values.csv        # 구조화된 SEP 전망 데이터
-├── index.html            # 프론트엔드
+├── app.py                    # Flask server + RAG pipeline
+├── sep_crawler.py            # SEP PDF crawler
+├── sep_structurer.py         # SEP data structuring → CSV
+├── sep_values.csv            # Structured SEP projection data
+├── index.html                # Frontend
+├── technical_report_EN.md    # English technical report (source)
+├── technical_report_EN.pdf   # English technical report (PDF)
+├── kcu_fed_report.pdf        # Original project report (Korean)
 ├── requirements.txt
-├── assets/               # 스크린샷 및 다이어그램
-└── .env                  # API 키 (Git 제외)
+├── assets/                   # Screenshots and diagrams
+└── .env                      # API keys (excluded from Git)
 ```
