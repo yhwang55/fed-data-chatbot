@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8" />
@@ -596,6 +596,24 @@
         demoBotMsg: "여기에 텍스트로 답변이 올라옵니다.",
         placeholder: "질문을 입력하세요. 예: 최근 5년 금리 그래프 보여줘",
         search: "검색",
+        loading: "연준 문서 분석 중...",
+        chartLoading: "차트 데이터 불러오는 중...",
+        chartError: "차트를 불러오지 못했습니다.",
+        fetchError: "오류가 발생했습니다: ",
+        shareNoQuestion: "공유할 질문이 아직 없습니다.",
+        shareCopied: "링크가 복사되었습니다! 이 링크를 공유하면 질문과 답변, 그래프를 함께 볼 수 있습니다.",
+        indicators: {
+          FEDFUNDS: "기준금리 (Fed Funds Rate)",
+          DGS10: "10년물 국채금리",
+          DGS2: "2년물 국채금리",
+          T10Y2Y: "장단기 금리차 (10Y-2Y)",
+          CPIAUCSL: "소비자물가지수 (CPI)",
+          PCEPI: "PCE 물가지수",
+          UNRATE: "실업률",
+          PAYEMS: "비농업 취업자수",
+          GDPC1: "실질 GDP",
+          M2SL: "M2 통화량",
+        },
       },
       en: {
         title: "FED Data Analyzer",
@@ -617,6 +635,24 @@
         demoBotMsg: "The AI response will appear here.",
         placeholder: "Ask a question. e.g. Show me interest rate chart for last 5 years",
         search: "Search",
+        loading: "Analyzing Fed documents...",
+        chartLoading: "Loading chart data...",
+        chartError: "Failed to load chart.",
+        fetchError: "An error occurred: ",
+        shareNoQuestion: "No question to share yet.",
+        shareCopied: "Link copied! Share this link to view the question, answer, and chart together.",
+        indicators: {
+          FEDFUNDS: "Fed Funds Rate",
+          DGS10: "10-Year Treasury Yield",
+          DGS2: "2-Year Treasury Yield",
+          T10Y2Y: "10Y-2Y Yield Spread",
+          CPIAUCSL: "CPI",
+          PCEPI: "PCE Price Index",
+          UNRATE: "Unemployment Rate",
+          PAYEMS: "Nonfarm Payrolls",
+          GDPC1: "Real GDP",
+          M2SL: "M2 Money Supply",
+        },
       },
       es: {
         title: "FED Data Analyzer",
@@ -638,6 +674,24 @@
         demoBotMsg: "La respuesta aparecerá aquí.",
         placeholder: "Haz una pregunta. Ej: Muéstrame el gráfico de tasas de los últimos 5 años",
         search: "Buscar",
+        loading: "Analizando documentos de la Fed...",
+        chartLoading: "Cargando datos del gráfico...",
+        chartError: "Error al cargar el gráfico.",
+        fetchError: "Se produjo un error: ",
+        shareNoQuestion: "Aún no hay pregunta para compartir.",
+        shareCopied: "¡Enlace copiado! Comparte este enlace para ver la pregunta, respuesta y gráfico juntos.",
+        indicators: {
+          FEDFUNDS: "Tasa de Fondos Federales",
+          DGS10: "Rendimiento del Tesoro 10 años",
+          DGS2: "Rendimiento del Tesoro 2 años",
+          T10Y2Y: "Diferencial 10Y-2Y",
+          CPIAUCSL: "IPC",
+          PCEPI: "Índice de Precios PCE",
+          UNRATE: "Tasa de Desempleo",
+          PAYEMS: "Empleo No Agrícola",
+          GDPC1: "PIB Real",
+          M2SL: "Oferta Monetaria M2",
+        },
       }
     };
 
@@ -697,7 +751,7 @@
 
     // 페이지 로드 시 저장된 언어 적용
     window.addEventListener("DOMContentLoaded", () => {
-      const saved = localStorage.getItem("lang") || "ko";
+      const saved = localStorage.getItem("lang") || "en";
       setLanguage(saved);
       renderHistory();
 
@@ -763,14 +817,15 @@
       // Share 버튼 로직
       document.getElementById("shareBtn").addEventListener("click", (e) => {
         e.stopPropagation();
+        const shareDict = i18n[localStorage.getItem("lang") || "en"] || i18n["en"];
         if (!currentQuestion) {
-          alert("공유할 질문이 아직 없습니다.");
+          alert(shareDict.shareNoQuestion);
           return;
         }
         const url = new URL(window.location.origin + window.location.pathname);
         url.searchParams.set("q", currentQuestion);
         navigator.clipboard.writeText(url.toString()).then(() => {
-          alert("링크가 복사되었습니다! 이 링크를 공유하면 질문과 답변, 그래프를 함께 볼 수 있습니다.");
+          alert(shareDict.shareCopied);
         });
         settingsMenu.classList.remove("open");
       });
@@ -784,15 +839,15 @@
       document.getElementById("newChatBtn").addEventListener("click", () => {
         currentQuestion = "";
         queryInput.value = "";
-        chartsArea.innerHTML = `<div class="chart-placeholder" data-i18n="chartPlaceholder1">${i18n[localStorage.getItem('lang') || 'ko'].chartPlaceholder1}</div>`;
+        chartsArea.innerHTML = `<div class="chart-placeholder" data-i18n="chartPlaceholder1">${i18n[localStorage.getItem('lang') || 'en'].chartPlaceholder1}</div>`;
         answerArea.innerHTML = `
           <div class="chat-message bot-message">
             <div class="message-bubble" data-i18n="demoBotMsg">
-              ${i18n[localStorage.getItem('lang') || 'ko'].demoBotMsg}
+              ${i18n[localStorage.getItem('lang') || 'en'].demoBotMsg}
             </div>
           </div>
         `;
-        indicatorBox.innerHTML = `<p class="used-indicator-text" data-i18n="indicatorPlaceholder">${i18n[localStorage.getItem('lang') || 'ko'].indicatorPlaceholder}</p>`;
+        indicatorBox.innerHTML = `<p class="used-indicator-text" data-i18n="indicatorPlaceholder">${i18n[localStorage.getItem('lang') || 'en'].indicatorPlaceholder}</p>`;
       });
 
       // ── 채팅 및 차트 연동 로직 ──
@@ -804,6 +859,7 @@
         if (!question) return;
 
         currentQuestion = question;
+        const dict = i18n[localStorage.getItem("lang") || "en"] || i18n["en"];
 
         // 1. 사용자 질문을 채팅창에 추가
         const userMsgHtml = `
@@ -818,7 +874,7 @@
         const loadingId = "loading-" + Date.now();
         const loadingHtml = `
         <div class="chat-message bot-message" id="${loadingId}">
-          <div class="message-bubble">연준 문서 분석 중...</div>
+          <div class="message-bubble">${dict.loading}</div>
         </div>
       `;
         answerArea.insertAdjacentHTML('beforeend', loadingHtml);
@@ -852,12 +908,15 @@
 
             // 로딩 상태 추가 (맨 뒤에 누적)
             const loadingChartId = "loading-chart-" + Date.now();
-            const loadingChartHtml = `<div id="${loadingChartId}" style="text-align:center; padding:20px 0; color:#94a3b8; font-size:14px; border-bottom: 1px solid #1f2937; margin-bottom: 20px;">차트 데이터 불러오는 중...</div>`;
+            const loadingChartHtml = `<div id="${loadingChartId}" style="text-align:center; padding:20px 0; color:#94a3b8; font-size:14px; border-bottom: 1px solid #1f2937; margin-bottom: 20px;">${dict.chartLoading}</div>`;
             chartsArea.insertAdjacentHTML('beforeend', loadingChartHtml);
             chartsArea.scrollTop = chartsArea.scrollHeight;
 
-            // 사용한 지표 업데이트
-            const indicatorsHtml = chatData.tickers.map(t => `<div style="margin-bottom:6px;"><code style="background:#1e293b; color:#93c5fd; padding:2px 6px; border-radius:4px;">${t[0]}</code> <span style="color:#d1d5db; font-size:13px;">${t[1]}</span></div>`).join("");
+            // 사용한 지표 업데이트 (현재 언어 기준 지표명 표시)
+            const indicatorsHtml = chatData.tickers.map(t => {
+              const name = (dict.indicators && dict.indicators[t[0]]) || t[1];
+              return `<div style="margin-bottom:6px;"><code style="background:#1e293b; color:#93c5fd; padding:2px 6px; border-radius:4px;">${t[0]}</code> <span style="color:#d1d5db; font-size:13px;">${name}</span></div>`;
+            }).join("");
             indicatorBox.innerHTML = indicatorsHtml;
 
             const chartRes = await fetch("/api/chart", {
@@ -867,7 +926,8 @@
                 tickers: chatData.tickers,
                 start_yr: chatData.start_yr,
                 end_yr: chatData.end_yr,
-                chart_type: chatData.chart_type || "line"
+                chart_type: chatData.chart_type || "line",
+                lang: localStorage.getItem("lang") || "en"
               })
             });
 
@@ -889,7 +949,7 @@
               chartsArea.scrollTop = chartsArea.scrollHeight;
               saveHistory(question);
             } else {
-              loadingContainer.innerHTML = `<span style="color:#ef4444">차트를 불러오지 못했습니다.</span>`;
+              loadingContainer.innerHTML = `<span style="color:#ef4444">${dict.chartError}</span>`;
             }
           } else {
             saveHistory(question);
@@ -898,7 +958,7 @@
         } catch (err) {
           console.error(err);
           const botBubble = document.getElementById(loadingId).querySelector('.message-bubble');
-          botBubble.innerHTML = "오류가 발생했습니다: " + err.message;
+          botBubble.innerHTML = dict.fetchError + err.message;
         }
       });
 
