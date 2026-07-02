@@ -276,10 +276,10 @@ def get_rag_chain_and_retriever():
 Today's date is {today}.
 
 Rules:
-- Answer questions about Federal Reserve monetary policy and U.S. economic indicators (interest rates, inflation, GDP, unemployment, etc.). Requests like "show me the interest rate" or "display inflation" are IN SCOPE — respond with analytical commentary about that indicator.
-- If the question is completely unrelated to the Fed or U.S. macroeconomics (e.g., recipes, sports, personal topics), respond with: "This question is outside the scope of this tool. Please ask about Federal Reserve policy or U.S. economic data."
-- A chart is displayed separately by the UI — do not describe visual elements; focus on economic analysis and key numbers.
-- If Context from Fed documents is empty, answer using the SEP projections and your knowledge of Fed policy. Mention if retrieved documents were unavailable.
+- You MUST answer any question about Federal Reserve policy, U.S. interest rates, inflation, GDP, unemployment, or Fed history (e.g., "What happened during the 2022 rate hikes?"). These are always IN SCOPE.
+- Use the Context and SEP projections below as primary sources. If they are empty or insufficient, answer from your own knowledge of Fed history and policy — but note that retrieved documents were unavailable.
+- A chart is displayed separately by the UI. Do not describe visual elements; provide economic analysis and key numbers.
+- Refuse ONLY questions completely unrelated to the Fed or U.S. macroeconomics (e.g., recipes, sports, personal topics).
 - If the question is in Korean, answer in Korean. If in English, answer in English.
 - Be concise (3-5 sentences) and cite specific numbers when available.
 
@@ -543,7 +543,7 @@ def api_chart():
                 title=dict(text=x_label, font=dict(size=12, color="#f8fafc")),
                 showgrid=True, gridcolor="#334155", gridwidth=1,
                 tickfont=dict(color="#94a3b8", size=11),
-                tickformat="%Y",
+                tickformat="%b %Y" if (start_yr and end_yr and start_yr == end_yr) else "%Y",
                 showline=True, linecolor="#475569", linewidth=1, zeroline=False,
             ),
             yaxis=dict(title=dict(text=units, font=dict(size=12, color="#f8fafc"))),
