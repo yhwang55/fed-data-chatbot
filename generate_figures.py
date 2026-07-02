@@ -37,35 +37,40 @@ plt.rcParams.update({
 # Figure 01 — System Architecture Overview
 # ══════════════════════════════════════════════════════════════════════════════
 def fig01_architecture():
-    # Canvas 13×8.5 — T-junction from User Query; doc sources absorbed into ChromaDB sublabel
-    fig, ax = plt.subplots(figsize=(13, 8.5))
-    ax.set_xlim(0, 13); ax.set_ylim(0, 8.5)
+    fig, ax = plt.subplots(figsize=(14, 8.5))
+    ax.set_xlim(0, 14); ax.set_ylim(0, 8.5)
     ax.axis("off")
     fig.patch.set_facecolor(C_WHITE)
 
-    LX, BW_L = 0.3, 4.7   # left col  0.3–5.0
-    RX, BW_R = 7.8, 4.9   # right col 7.8–12.7
-    L_CX = LX + BW_L / 2  # 2.65
-    R_CX = RX + BW_R / 2  # 10.25
+    # Muted palette — two subtle tints + cream SEP
+    L_FC, L_EC, L_TC = "#F0F7F4", "#9DBFB5", "#0F4C3A"   # soft sage — Chart Path
+    R_FC, R_EC, R_TC = "#F0F4FB", "#9AAFD4", "#1B2A4A"   # soft slate — Text Path
+    S_FC, S_EC, S_TC = "#FDFAEF", "#C9AA6E", "#78350F"   # pale cream — SEP
+    UQ_FC, UQ_EC, UQ_TC = "#F8F9FA", "#6B7280", "#1B2A4A"
+
+    LX, BW_L = 0.3, 4.5    # left col  0.3 – 4.8
+    RX, BW_R = 9.2, 4.5    # right col 9.2 – 13.7  (wide centre gap)
+    L_CX = LX + BW_L / 2   # 2.55
+    R_CX = RX + BW_R / 2   # 11.45
     BH = 0.9
 
-    R1_B = 5.8   # Keyword / ChromaDB  → top 6.7
-    R2_B = 4.3   # FRED / GPT          → top 5.2  (gap 0.6 from R1)
-    R3_B = 2.8   # Plotly / Response   → top 3.7  (gap 0.6 from R2)
+    R1_B = 5.8
+    R2_B = 4.3
+    R3_B = 2.8
 
-    SEP_H = 0.75
-    SEP_B = R2_B + (BH - SEP_H) / 2   # 4.075 — centred in row-2
-    SEPX  = LX + BW_L + 0.35          # 5.35
-    SEPW  = RX - SEPX - 0.35          # 2.10
+    SEP_H = 0.80
+    SEP_W = 2.8
+    SEPX  = (LX + BW_L + RX) / 2 - SEP_W / 2   # centred in gap ≈ 5.7
+    SEP_B = R2_B + (BH - SEP_H) / 2             # aligned with row-2
 
     UQ_B, UQ_H = 7.3, 0.85
-    UQ_CX  = 6.5
-    SPLIT_Y = 7.0   # T-junction bar
+    UQ_CX  = 7.0
+    SPLIT_Y = 7.0
 
-    def box(x, y, w, h, l1, l2="", fc=C_LIGHT, ec=C_BORDER,
+    def box(x, y, w, h, l1, l2="", fc=UQ_FC, ec=C_BORDER,
             tc=C_BLUE, sc=C_GRAY, fs=11, bold=False):
         ax.add_patch(FancyBboxPatch((x, y), w, h, boxstyle="round,pad=0.06",
-                                    facecolor=fc, edgecolor=ec, linewidth=1.3, zorder=2))
+                                    facecolor=fc, edgecolor=ec, linewidth=1.2, zorder=2))
         yoff = 0.13 if l2 else 0
         ax.text(x+w/2, y+h/2+yoff, l1, ha="center", va="center",
                 fontsize=fs, color=tc, fontweight="bold" if bold else "normal", zorder=3)
@@ -75,80 +80,78 @@ def fig01_architecture():
 
     def varr(x, y_from, y_to, c=C_GRAY):
         ax.annotate("", xy=(x, y_to), xytext=(x, y_from),
-                    arrowprops=dict(arrowstyle="-|>", color=c, lw=1.5, mutation_scale=14), zorder=4)
+                    arrowprops=dict(arrowstyle="-|>", color=c, lw=1.4, mutation_scale=13), zorder=4)
 
-    def harr(x1, y, x2, c=C_GRAY):
+    def harr(x1, y, x2, lbl="", c=C_GRAY):
         ax.annotate("", xy=(x2, y), xytext=(x1, y),
-                    arrowprops=dict(arrowstyle="-|>", color=c, lw=1.5, mutation_scale=13), zorder=4)
+                    arrowprops=dict(arrowstyle="-|>", color=c, lw=1.4, mutation_scale=13), zorder=4)
+        if lbl:
+            ax.text((x1+x2)/2, y+0.14, lbl, ha="center", fontsize=8,
+                    color=c, style="italic", zorder=5)
 
     # ── Title ─────────────────────────────────────────────────────────────
-    ax.text(6.5, 8.36, "Fed Data Chatbot — System Architecture",
+    ax.text(7.0, 8.36, "Fed Data Chatbot — System Architecture",
             ha="center", fontsize=13, fontweight="bold", color=C_BLUE)
 
     # ── User Query ────────────────────────────────────────────────────────
     box(UQ_CX - 3.0, UQ_B, 6.0, UQ_H, "User Query (Natural Language)",
-        fc="#EEF2FF", ec=C_INDIGO, tc=C_INDIGO, bold=True)
+        fc=UQ_FC, ec="#9CA3AF", tc=C_BLUE, bold=True)
 
-    # ── T-junction: short vertical stem → horizontal bar → two short drops ─
-    ax.plot([UQ_CX, UQ_CX], [UQ_B, SPLIT_Y],  color=C_GRAY, lw=1.5, zorder=3)
-    ax.plot([L_CX,  R_CX],  [SPLIT_Y, SPLIT_Y], color=C_GRAY, lw=1.5, zorder=3)
+    # ── T-junction ────────────────────────────────────────────────────────
+    ax.plot([UQ_CX, UQ_CX], [UQ_B, SPLIT_Y],   color=C_GRAY, lw=1.4, zorder=3)
+    ax.plot([L_CX,  R_CX],  [SPLIT_Y, SPLIT_Y], color=C_GRAY, lw=1.4, zorder=3)
     varr(L_CX, SPLIT_Y, R1_B + BH)
     varr(R_CX, SPLIT_Y, R1_B + BH)
 
-    ax.text(4.5,  SPLIT_Y + 0.09, "Chart Path", fontsize=9,
-            color=C_TEAL,   ha="center", style="italic")
-    ax.text(8.5,  SPLIT_Y + 0.09, "Text Path",  fontsize=9,
-            color=C_INDIGO, ha="center", style="italic")
+    ax.text(L_CX, SPLIT_Y + 0.1, "Chart Path", fontsize=9,
+            color="#4B8C7A", ha="center", style="italic")
+    ax.text(R_CX, SPLIT_Y + 0.1, "Text Path",  fontsize=9,
+            color="#4A5EA8", ha="center", style="italic")
 
     # ══ LEFT COLUMN ═══════════════════════════════════════════════════════
     box(LX, R1_B, BW_L, BH, "Keyword Resolver",
         "NL → FRED Ticker (deterministic)",
-        fc="#ECFDF5", ec="#6EE7B7", tc=C_TEAL)
+        fc=L_FC, ec=L_EC, tc=L_TC)
     varr(L_CX, R1_B, R2_B + BH)
 
     box(LX, R2_B, BW_L, BH, "FRED API",
         "10 macroeconomic time-series",
-        fc="#F0FDF4", ec="#86EFAC", tc="#166534")
+        fc=L_FC, ec=L_EC, tc=L_TC)
     varr(L_CX, R2_B, R3_B + BH)
 
     box(LX, R3_B, BW_L, BH, "Plotly.js Interactive Chart",
         "Line / Scatter + SEP Overlay",
-        fc="#DCFCE7", ec="#4ADE80", tc="#166534")
+        fc=L_FC, ec=L_EC, tc=L_TC)
 
-    # ══ RIGHT COLUMN (doc sources in ChromaDB sublabel — no extra boxes) ══
+    # ══ RIGHT COLUMN ══════════════════════════════════════════════════════
     box(RX, R1_B, BW_R, BH, "ChromaDB (MMR Retrieval)",
         "Fed Speeches · FOMC Minutes · SEP Docs  (APScheduler daily)",
-        fc="#EEF2FF", ec="#A5B4FC", tc=C_INDIGO, sc="#5B21B6", fs=10.5)
+        fc=R_FC, ec=R_EC, tc=R_TC, sc="#4A5EA8", fs=10.5)
     varr(R_CX, R1_B, R2_B + BH)
 
     box(RX, R2_B, BW_R, BH, "GPT-4o-mini (RAG Chain)",
         "Retrieved context + SEP projection",
-        fc="#EDE9FE", ec="#C4B5FD", tc="#5B21B6")
+        fc=R_FC, ec=R_EC, tc=R_TC)
     varr(R_CX, R2_B, R3_B + BH)
 
     box(RX, R3_B, BW_R, BH, "Grounded Analytical Response",
         "Strictly from retrieved docs + SEP",
-        fc="#DDD6FE", ec="#8B5CF6", tc="#5B21B6")
+        fc=R_FC, ec=R_EC, tc=R_TC)
 
-    # ══ SEP CSV (centre gap, same row as FRED / GPT) ══════════════════════
-    box(SEPX, SEP_B, SEPW, SEP_H, "sep_values.csv",
+    # ══ SEP CSV (centred in wide gap) ════════════════════════════════════
+    box(SEPX, SEP_B, SEP_W, SEP_H, "sep_values.csv",
         "SEP projections (quarterly)",
-        fc="#FEF9C3", ec="#FDE047", tc="#713F12", fs=9.5)
-    SEP_CY = SEP_B + SEP_H / 2   # 4.475
+        fc=S_FC, ec=S_EC, tc=S_TC, fs=9.5)
+    SEP_CY = SEP_B + SEP_H / 2
 
-    harr(SEPX,        SEP_CY, LX + BW_L, "#B45309")   # → FRED right edge (0.35 gap)
-    harr(SEPX + SEPW, SEP_CY, RX,        "#B45309")   # → GPT left edge  (0.35 gap)
-
-    ax.text(SEPX - 0.07,        SEP_CY + 0.18, "SEP\noverlay",
-            fontsize=7.5, color="#B45309", ha="right", va="center", style="italic")
-    ax.text(SEPX + SEPW + 0.07, SEP_CY + 0.18, "get_sep_\ncontext()",
-            fontsize=7.5, color="#B45309", ha="left",  va="center", style="italic")
+    harr(SEPX,          SEP_CY, LX + BW_L + 0.05, lbl="SEP overlay",     c="#B45309")
+    harr(SEPX + SEP_W,  SEP_CY, RX - 0.05,         lbl="get_sep_context()", c="#B45309")
 
     # ── Legend ────────────────────────────────────────────────────────────
     legend_items = [
-        mpatches.Patch(facecolor="#ECFDF5", edgecolor="#6EE7B7", label="Chart Path (FRED API)"),
-        mpatches.Patch(facecolor="#EEF2FF", edgecolor="#A5B4FC", label="Text Path (RAG)"),
-        mpatches.Patch(facecolor="#FEF9C3", edgecolor="#FDE047", label="SEP Projections"),
+        mpatches.Patch(facecolor=L_FC, edgecolor=L_EC, label="Chart Path (FRED API)"),
+        mpatches.Patch(facecolor=R_FC, edgecolor=R_EC, label="Text Path (RAG)"),
+        mpatches.Patch(facecolor=S_FC, edgecolor=S_EC, label="SEP Projections"),
     ]
     ax.legend(handles=legend_items, loc="lower left", fontsize=9,
               framealpha=0.9, bbox_to_anchor=(0.01, 0.01))
@@ -293,9 +296,9 @@ def fig03_ui_composite():
     }
     order = ["main", "scatter", "language", "indicators"]
     positions = [(0.02, 0.35, 0.60, 0.61),   # (a) main — large left
-                 (0.64, 0.35, 0.34, 0.61),   # (b) scatter — right top
-                 (0.02, 0.01, 0.30, 0.32),   # (c) language — bottom left
-                 (0.34, 0.01, 0.64, 0.32)]   # (d) indicators — bottom right
+                 (0.02, 0.01, 0.58, 0.32),   # (b) scatter — bottom left
+                 (0.64, 0.35, 0.34, 0.61),   # (c) language — right top
+                 (0.64, 0.01, 0.34, 0.32)]   # (d) indicators — right bottom, aligned with (c)
 
     for key, (left, bottom, width, height) in zip(order, positions):
         if key not in imgs:
