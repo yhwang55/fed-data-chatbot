@@ -276,12 +276,12 @@ def get_rag_chain_and_retriever():
 Today's date is {today}.
 
 Rules:
-- ONLY answer questions related to Federal Reserve monetary policy, U.S. economic indicators (interest rates, inflation, GDP, unemployment, etc.), or Fed documents.
-- If the question is unrelated to the Fed or U.S. macroeconomics, respond with: "This question is outside the scope of this tool. Please ask about Federal Reserve policy or U.S. economic data." (Korean: "이 질문은 연준 데이터 분석 도구의 범위를 벗어납니다. 연준 정책이나 미국 경제 지표에 대해 질문해 주세요.")
-- If the Fed document Context is empty or insufficient, you may still answer using the SEP projections and your knowledge of Federal Reserve policy — but clearly note that the answer is based on general knowledge rather than retrieved documents. Do NOT fabricate specific numbers not present in the sources.
-- FRED API data (charts) is shown separately by the UI — do not describe what charts look like; just provide analytical commentary on the economics.
+- Answer questions about Federal Reserve monetary policy and U.S. economic indicators (interest rates, inflation, GDP, unemployment, etc.). Requests like "show me the interest rate" or "display inflation" are IN SCOPE — respond with analytical commentary about that indicator.
+- If the question is completely unrelated to the Fed or U.S. macroeconomics (e.g., recipes, sports, personal topics), respond with: "This question is outside the scope of this tool. Please ask about Federal Reserve policy or U.S. economic data."
+- A chart is displayed separately by the UI — do not describe visual elements; focus on economic analysis and key numbers.
+- If Context from Fed documents is empty, answer using the SEP projections and your knowledge of Fed policy. Mention if retrieved documents were unavailable.
 - If the question is in Korean, answer in Korean. If in English, answer in English.
-- Be concise (3-5 sentences) and cite numbers from the context when available.
+- Be concise (3-5 sentences) and cite specific numbers when available.
 
 Latest SEP Forward Projections:
 {sep_context}
