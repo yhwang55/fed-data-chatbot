@@ -123,6 +123,23 @@ scheduler = BackgroundScheduler(timezone="Asia/Seoul")
 scheduler.add_job(update_vector_db, 'cron', hour=4, minute=0)
 scheduler.start()
 
+# 앱 시작 시 ChromaDB가 비어있으면 즉시 초기 인덱싱 실행
+def _init_db_if_empty():
+    try:
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small", max_retries=0)
+        db = Chroma(persist_directory="./fed_db", embedding_function=embeddings)
+        count = db.get(include=[])
+        if len(count["ids"]) == 0:
+            print("[Startup] ChromaDB is empty — running initial indexing...")
+            update_vector_db()
+        else:
+            print(f"[Startup] ChromaDB OK ({len(count['ids'])} chunks).")
+    except Exception as e:
+        print(f"[Startup] DB init check failed: {e}")
+
+import threading
+threading.Thread(target=_init_db_if_empty, daemon=True).start()
+
 # ── 2. 지표 설정 및 분할기 ──────────────────────────────────────────
 INDICATORS = {
     "FEDFUNDS": "Fed Funds Rate",
@@ -261,7 +278,7 @@ Today's date is {today}.
 Rules:
 - ONLY answer questions related to Federal Reserve monetary policy, U.S. economic indicators (interest rates, inflation, GDP, unemployment, etc.), or Fed documents.
 - If the question is unrelated to the Fed or U.S. macroeconomics, respond with: "This question is outside the scope of this tool. Please ask about Federal Reserve policy or U.S. economic data." (Korean: "이 질문은 연준 데이터 분석 도구의 범위를 벗어납니다. 연준 정책이나 미국 경제 지표에 대해 질문해 주세요.")
-- If the provided Context does not contain enough information to answer accurately, say so explicitly. Do NOT fabricate or guess.
+- If the Fed document Context is empty or insufficient, you may still answer using the SEP projections and your knowledge of Federal Reserve policy — but clearly note that the answer is based on general knowledge rather than retrieved documents. Do NOT fabricate specific numbers not present in the sources.
 - FRED API data (charts) is shown separately by the UI — do not describe what charts look like; just provide analytical commentary on the economics.
 - If the question is in Korean, answer in Korean. If in English, answer in English.
 - Be concise (3-5 sentences) and cite numbers from the context when available.
@@ -382,7 +399,7 @@ PLOTLY_LAYOUT = dict(
         bordercolor="#334155", borderwidth=1,
         font=dict(color="#f8fafc", size=11),
     ),
-    margin=dict(l=50, r=20, t=60, b=80),
+    margin=dict(l=50, r=20, t=60, b=110),
     hovermode="x unified",
     hoverlabel=dict(bgcolor="#1e293b", bordercolor="#3b82f6", font=dict(color="#f8fafc")),
 )
@@ -505,7 +522,7 @@ def api_chart():
                             fig.add_annotation(
                                 text=sep_note.get(lang, sep_note["en"]),
                                 xref="paper", yref="paper",
-                                x=0.0, y=-0.22,
+                                x=0.0, y=-0.35,
                                 showarrow=False,
                                 font=dict(size=9, color="#64748b"),
                                 align="left", xanchor="left"
