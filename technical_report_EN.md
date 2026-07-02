@@ -1,6 +1,7 @@
 ---
 title: "Fed Data Chatbot: A Hybrid RAG and FRED API System for Natural Language Federal Reserve Analysis"
 toc: false
+geometry: "left=1in,right=1in,top=1in,bottom=1in"
 ---
 
 \begin{center}

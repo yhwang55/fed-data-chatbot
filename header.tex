@@ -1,4 +1,12 @@
 \usepackage[dvipsnames,svgnames,x11names]{xcolor}
+\makeatletter
+\renewcommand{\maketitle}{%
+  \begin{center}
+    {\bfseries\LARGE \@title \par}
+  \end{center}
+  \vspace{0.5em}
+}
+\makeatother
 \usepackage{float}
 \floatplacement{figure}{H}
 \usepackage{booktabs}
