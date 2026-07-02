@@ -1,12 +1,31 @@
-# Fed Data Chatbot: A Hybrid RAG and FRED API System for Natural Language Federal Reserve Analysis
-
-**Yoon Hwang** | University of Wisconsin-Madison | Data Science & Economics & Information Science
-
-yoondbs3@gmail.com | github.com/yhwang55
-
-> **[Best Project Award · 1st Place]** KCU 2026 *(University of Wisconsin-Madison)*
-
 ---
+title: "Fed Data Chatbot: A Hybrid RAG and FRED API System for Natural Language Federal Reserve Analysis"
+toc: false
+---
+
+\begin{center}
+
+\vspace{1em}
+
+\textbf{Yoon Hwang} $\mid$ University of Wisconsin-Madison $\mid$ Data Science \& Economics \& Information Science
+
+\medskip
+
+yoondbs3@gmail.com $\mid$ github.com/yhwang55
+
+\medskip
+
+\textbf{[Best Project Award $\cdot$ 1st Place]} KCU 2026 \textit{(University of Wisconsin-Madison)}
+
+\end{center}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\tableofcontents
+
+\newpage
 
 ## Abstract
 
