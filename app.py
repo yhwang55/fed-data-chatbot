@@ -151,7 +151,7 @@ CHART_I18N = {
         "GDPC1":    ("실질 GDP",                 "10억 달러 (Billions of $)"),
         "M2SL":     ("M2 통화량",                "십억 달러"),
         "_x_label":   "연도 (Year)",
-        "_sep_suffix": "SEP 전망",
+        "_sep_suffix": "예상 경로 (SEP 전망)",
     },
     "en": {
         "FEDFUNDS": ("Fed Funds Rate",          "Rate (%)"),
@@ -165,7 +165,7 @@ CHART_I18N = {
         "GDPC1":    ("Real GDP",                "Billions of $"),
         "M2SL":     ("M2 Money Supply",         "Billions of $"),
         "_x_label":   "Year",
-        "_sep_suffix": "SEP Forecast",
+        "_sep_suffix": "Projected Path (SEP Forecast)",
     },
     "es": {
         "FEDFUNDS": ("Tasa de Fondos Federales",        "Tasa (%)"),
@@ -179,7 +179,7 @@ CHART_I18N = {
         "GDPC1":    ("PIB Real",                        "Miles de Millones $"),
         "M2SL":     ("Oferta Monetaria M2",             "Miles de Millones $"),
         "_x_label":   "Año",
-        "_sep_suffix": "Proyección SEP",
+        "_sep_suffix": "Trayectoria Proyectada (SEP)",
     },
 }
 
@@ -382,7 +382,7 @@ PLOTLY_LAYOUT = dict(
         bordercolor="#334155", borderwidth=1,
         font=dict(color="#f8fafc", size=11),
     ),
-    margin=dict(l=50, r=20, t=60, b=50),
+    margin=dict(l=50, r=20, t=60, b=80),
     hovermode="x unified",
     hoverlabel=dict(bgcolor="#1e293b", bordercolor="#3b82f6", font=dict(color="#f8fafc")),
 )
@@ -497,6 +497,19 @@ def api_chart():
                                 line=dict(color="#ef4444", width=2, dash='dot'),
                                 marker=dict(symbol="circle", size=6, color="#ef4444")
                             ))
+                            sep_note = {
+                                "ko": "※ 점선은 연준 SEP(경제전망 요약)에 기반한 예상 경로입니다.",
+                                "en": "※ Dotted line shows the Fed's projected path based on SEP (Summary of Economic Projections).",
+                                "es": "※ La línea punteada muestra la trayectoria proyectada por la Fed según el SEP.",
+                            }
+                            fig.add_annotation(
+                                text=sep_note.get(lang, sep_note["en"]),
+                                xref="paper", yref="paper",
+                                x=0.0, y=-0.22,
+                                showarrow=False,
+                                font=dict(size=9, color="#64748b"),
+                                align="left", xanchor="left"
+                            )
                 except Exception as e:
                     print(f"Error adding SEP trace: {e}")
 
